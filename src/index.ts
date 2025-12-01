@@ -22,7 +22,7 @@ function constructTarget(metadata: PackageMetadata, packageName: string) {
     return `${user}@${metadata.host}:${metadata.user}${packageName ? `/${packageName}` : ""}`
 
   default:
-    return `https://${metadata.host}/${metadata.user}/${packageName ? `/${packageName}` : ""}`
+    return `https://${metadata.host}/${metadata.user}${packageName ? `/${packageName}` : ""}`
   }
 }
 
@@ -44,7 +44,7 @@ app.on("GET", ["/", "/:package/*"], (c) => {
   const isGoGet = c.req.queries("go-get")?.at(0) === "1"
 
   const goMetaTags = () =>
-    html`\
+    html`
     <meta name="go-import" content="${host} ${metadata.vcs ?? "git"} ${target}">
     <meta name="go-source" content="${host} https://${host} https://${metadata.host}/${metadata.user}/${packageName}/tree/HEAD{/dir} https://${metadata.host}/${metadata.user}/${packageName}/blob/HEAD{/dir}/{file}#L{line}">`
 
