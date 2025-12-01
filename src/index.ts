@@ -28,7 +28,7 @@ function constructTarget(metadata: PackageMetadata, packageName: string) {
 
 const app = new Hono()
 
-app.on("GET", ["/", "/:package?/*"], (c) => {
+app.on("GET", ["/", "/:package/*"], (c) => {
   const host = c.req.header("Host")
 
   const packageName = c.req.param("package") ?? ""
@@ -52,8 +52,7 @@ app.on("GET", ["/", "/:package?/*"], (c) => {
     html`\
 <!DOCTYPE html>
 <html>
-  <head>
-    ${isGoGet ? goMetaTags() : ""}
+  <head>${isGoGet ? goMetaTags() : ""}
     <meta http-equiv="Refresh" content="0;url=${redirectTo}">
   </head>
   <body>
