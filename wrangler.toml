@@ -1,0 +1,7 @@
+name = "goimports"
+main = "src/index.ts"
+compatibility_date = "2025-11-30"
+
+[[routes]]
+pattern = "go.chardoncs.dev"
+custom_domain = true
