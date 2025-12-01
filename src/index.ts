@@ -39,26 +39,30 @@ app.on("GET", ["/", "/:package/*"], (c) => {
   }
 
   const target = metadata.target ?? constructTarget(metadata, packageName)
-  const redirectTo = metadata.redirectTo ?? target 
+  const httpsTarget = constructTarget({ ...metadata, protocol: "https" }, packageName)
+  const redirectTo = metadata.redirectTo ?? httpsTarget
 
   const isGoGet = c.req.queries("go-get")?.at(0) === "1"
 
   const goMetaTags = () =>
-    html`
-    <meta name="go-import" content="${host} ${metadata.vcs ?? "git"} ${target}">
-    <meta name="go-source" content="${host} https://${target} https://${target}/tree/HEAD{/dir} https://${target}/blob/HEAD{/dir}/{file}#L{line}">`
+    html`\
+<meta name="go-import" content="${host} ${metadata.vcs ?? "git"} ${target}">
+<meta name="go-source" content="${host} ${httpsTarget} ${httpsTarget}/tree/HEAD{/dir} ${httpsTarget}/blob/HEAD{/dir}/{file}#L{line}">\
+`
 
   return c.html(
     html`\
 <!DOCTYPE html>
 <html>
-  <head>${isGoGet ? goMetaTags() : ""}
-    <meta http-equiv="Refresh" content="0;url=${redirectTo}">
-  </head>
-  <body>
-    Redirecting to <a href="${redirectTo}">${redirectTo}</a>...
-  </body>
-</html>`
+<head>
+${isGoGet ? goMetaTags() : ""}
+<meta http-equiv="Refresh" content="0;url=${redirectTo}">
+</head>
+<body>
+Redirecting to <a href="${redirectTo}">${redirectTo}</a>...
+</body>
+</html>
+`
   )
 })
 
