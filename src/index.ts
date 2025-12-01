@@ -15,14 +15,16 @@ interface PackageMetadata {
 
 const PACKAGE_EXCEPTIONS: Record<string, PackageMetadata | undefined> = {}
 
+const getPackagePath = (pkg: string) => pkg ? `/${pkg}` : ""
+
 function constructTarget(metadata: PackageMetadata, packageName: string) {
   switch (metadata.protocol) {
   case "ssh":
     const user = (metadata.vcs ?? "git") === "git" ? "git" : metadata.user
-    return `${user}@${metadata.host}:${metadata.user}${packageName ? `/${packageName}` : ""}`
+    return `${user}@${metadata.host}:${metadata.user}${getPackagePath(packageName)}`
 
   default:
-    return `https://${metadata.host}/${metadata.user}${packageName ? `/${packageName}` : ""}`
+    return `https://${metadata.host}/${metadata.user}${getPackagePath(packageName)}`
   }
 }
 
@@ -39,15 +41,17 @@ app.on("GET", ["/", "/:package/*"], (c) => {
   }
 
   const target = metadata.target ?? constructTarget(metadata, packageName)
-  const httpsTarget = constructTarget({ ...metadata, protocol: "https" }, packageName)
+  const httpsTarget = !metadata.protocol || metadata.protocol === "https" ? target : constructTarget({ ...metadata, protocol: "https" }, packageName)
   const redirectTo = metadata.redirectTo ?? httpsTarget
 
   const isGoGet = c.req.queries("go-get")?.at(0) === "1"
 
+  const packagePath = getPackagePath(packageName)
+
   const goMetaTags = () =>
     html`\
-<meta name="go-import" content="${host} ${metadata.vcs ?? "git"} ${target}">
-<meta name="go-source" content="${host} ${httpsTarget} ${httpsTarget}/tree/HEAD{/dir} ${httpsTarget}/blob/HEAD{/dir}/{file}#L{line}">\
+<meta name="go-import" content="${host}${packagePath} ${metadata.vcs ?? "git"} ${target}">
+<meta name="go-source" content="${host}${packagePath} ${httpsTarget} ${httpsTarget}/tree/HEAD{/dir} ${httpsTarget}/blob/HEAD{/dir}/{file}#L{line}">\
 `
 
   return c.html(
