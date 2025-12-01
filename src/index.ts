@@ -46,7 +46,7 @@ app.on("GET", ["/", "/:package/*"], (c) => {
   const goMetaTags = () =>
     html`
     <meta name="go-import" content="${host} ${metadata.vcs ?? "git"} ${target}">
-    <meta name="go-source" content="${host} https://${host} https://${metadata.host}/${metadata.user}/${packageName}/tree/HEAD{/dir} https://${metadata.host}/${metadata.user}/${packageName}/blob/HEAD{/dir}/{file}#L{line}">`
+    <meta name="go-source" content="${host} https://${metadata.host} https://${metadata.host}/${metadata.user}/${packageName}/tree/HEAD{/dir} https://${metadata.host}/${metadata.user}/${packageName}/blob/HEAD{/dir}/{file}#L{line}">`
 
   return c.html(
     html`\
