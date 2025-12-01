@@ -19,10 +19,10 @@ function constructTarget(metadata: PackageMetadata, packageName: string) {
   switch (metadata.protocol) {
   case "ssh":
     const user = (metadata.vcs ?? "git") === "git" ? "git" : metadata.user
-    return `${user}@${metadata.host}:${metadata.user}/${packageName}`
+    return `${user}@${metadata.host}:${metadata.user}${packageName ? `/${packageName}` : ""}`
 
   default:
-    return `https://${metadata.host}/${metadata.user}/${packageName}`
+    return `https://${metadata.host}/${metadata.user}/${packageName ? `/${packageName}` : ""}`
   }
 }
 
