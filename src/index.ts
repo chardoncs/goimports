@@ -39,7 +39,7 @@ app.on("GET", ["/", "/:package/*"], (c) => {
   }
 
   const target = metadata.target ?? constructTarget(metadata, packageName)
-  const redirectTo = metadata.redirectTo ?? `https://${metadata.host}/${metadata.user}/${packageName}`
+  const redirectTo = metadata.redirectTo ?? `https://${metadata.host}/${metadata.user}${packageName ? `/${packageName}` : ""}`
 
   const isGoGet = c.req.queries("go-get")?.at(0) === "1"
 
