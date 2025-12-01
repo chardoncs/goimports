@@ -39,14 +39,14 @@ app.on("GET", ["/", "/:package/*"], (c) => {
   }
 
   const target = metadata.target ?? constructTarget(metadata, packageName)
-  const redirectTo = metadata.redirectTo ?? `https://${metadata.host}/${metadata.user}${packageName ? `/${packageName}` : ""}`
+  const redirectTo = metadata.redirectTo ?? target 
 
   const isGoGet = c.req.queries("go-get")?.at(0) === "1"
 
   const goMetaTags = () =>
     html`
     <meta name="go-import" content="${host} ${metadata.vcs ?? "git"} ${target}">
-    <meta name="go-source" content="${host} https://${metadata.host} https://${metadata.host}/${metadata.user}/${packageName}/tree/HEAD{/dir} https://${metadata.host}/${metadata.user}/${packageName}/blob/HEAD{/dir}/{file}#L{line}">`
+    <meta name="go-source" content="${host} https://${target} https://${target}/tree/HEAD{/dir} https://${target}/blob/HEAD{/dir}/{file}#L{line}">`
 
   return c.html(
     html`\
