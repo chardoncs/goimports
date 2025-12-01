@@ -46,13 +46,15 @@ app.on("GET", ["/", "/:package/*"], (c) => {
 
   const isGoGet = c.req.queries("go-get")?.at(0) === "1"
 
-  const packagePath = getPackagePath(packageName)
 
-  const goMetaTags = () =>
-    html`\
+  const goMetaTags = () => {
+    const packagePath = getPackagePath(packageName)
+
+    return html`\
 <meta name="go-import" content="${host}${packagePath} ${metadata.vcs ?? "git"} ${target}">
 <meta name="go-source" content="${host}${packagePath} ${httpsTarget} ${httpsTarget}/tree/HEAD{/dir} ${httpsTarget}/blob/HEAD{/dir}/{file}#L{line}">\
 `
+  }
 
   return c.html(
     html`\
