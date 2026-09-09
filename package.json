@@ -9,7 +9,7 @@
     "types": "wrangler types"
   },
   "dependencies": {
-    "hono": "^4.12.31",
+    "hono": "^4.13.5",
     "node-addon-api": "^8.9.0"
   },
   "devDependencies": {
